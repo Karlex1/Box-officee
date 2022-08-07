@@ -1,6 +1,10 @@
 import React, { useEffect,useReducer } from 'react';
 import { useParams } from 'react-router-dom';
 import { apiGet } from '../misc/config';
+import Cast from '../shows/Card';
+import Details from '../shows/Details';
+import Seasons from '../shows/Seasons';
+import ShowMainData from '../shows/showMainData';
 
 const initialstate = {
     show: null,
@@ -33,7 +37,7 @@ const Show = () => {
             let isMounted = 'true';
             apiGet(`/shows/${id}?embed[]=seasons&embed7[]=cast`).then(results => {
                 if (isMounted) {
-                    dispatch({type:'FETCH_SUCESS',show:results})
+                    dispatch({ type: 'FETCH_SUCESS', show: results });
                 //    setShow(results);
                 // setIsLoading(false); 
                 }}).catch(
@@ -55,7 +59,27 @@ const Show = () => {
         return <div>Loading...</div>
     }
     return (
-        <div>show</div>
+        <div>
+            <ShowMainData
+                image={show.image}
+                name={show.name}
+                rating={show.rating}
+                summary={show.summary}
+                tags={show.genres}
+            />
+            <div>
+                <h4>Details</h4>
+                <Details
+                    status={show.status} 
+                    network={show.network}
+                    premiered={show.premiered} />
+            </div>
+            <div> <h4>Season</h4>
+                < Seasons season={ show._embedded.seasons} /></div>
+            <div><h4>Cast</h4>
+                <Cast
+                    cast={show._embedded.cast} /></div>
+        </div>
     )
 }
 
