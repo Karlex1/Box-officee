@@ -5,13 +5,15 @@ import { apiGet } from '../misc/config';
 import Details from '../shows/Details';
 import Seasons from '../shows/Seasons';
 import ShowMainData from '../shows/showMainData';
+import { InfoBlock, ShowPageWrapper } from '../shows/showStyled';
 import Webchannel from '../shows/Webchannel';
-
+// value of  state initially in the object.
 const initialstate = {
     show: null,
     isLoading: true,
     error: null
 }
+// function for handle updation of state.
 const reducer = (prevState, action) => {
     switch (action.type) {
         case 'FETCH_SUCESS': {
@@ -27,6 +29,7 @@ const reducer = (prevState, action) => {
     }
 }
 
+// Main component
 const Show = () => {
 
     const [{ isLoading, error, show }, dispatch] = useReducer(reducer, initialstate);
@@ -52,17 +55,17 @@ const Show = () => {
             return () => { isMounted = false; }
         }, [id])
     // console.log('show', show);
+
+// for load time and error
     if (isLoading) {
         return <div>Loading...</div>
     }
     if (error) {
         return <div>Error occured: {error}</div>
     }
-    if (isLoading) {
-        return <div>Loading...</div>
-    }
+ // For display the show details.
     return (
-        <div>
+        <ShowPageWrapper>
             <ShowMainData
                 image={show.image}
                 name={show.name}
@@ -70,24 +73,24 @@ const Show = () => {
                 summary={show.summary}
                 tags={show.genres}
             />
-            <div>
+            <InfoBlock>
                 <h4>Details</h4>
                 <Details
                     status={show.status}
                     network={show.network}
                     premiered={show.premiered} />
-            </div>
-            <div> <h4>Season</h4>
+            </InfoBlock>
+            <InfoBlock> <h4>Season</h4>
                 < Seasons
-                    season={show._embedded.seasons} /></div>
+                    season={show._embedded.seasons} /></InfoBlock>
             {/* <div><h4>Cast</h4>
                 <Cast
                     cast={show._embedded.cast} /></div> */}
-
+<InfoBlock>
             <h4>WEB streaming Platfom</h4>
             <Webchannel
-                web_c={show.webChannel} />
-        </div>
+                web_c={show.webChannel} /></InfoBlock>
+        </ShowPageWrapper>
     )
 }
 
