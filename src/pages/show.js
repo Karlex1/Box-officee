@@ -1,6 +1,7 @@
-import React, { useEffect, useReducer } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
-import { apiGet } from '../misc/config';
+// import { apiGet } from '../misc/config';
+import { useShow } from '../misc/customHooks';
 //import Cast from '../shows/Cast';
 import Details from '../shows/Details';
 import Seasons from '../shows/Seasons';
@@ -8,52 +9,13 @@ import ShowMainData from '../shows/showMainData';
 import { InfoBlock, ShowPageWrapper } from '../shows/showStyled';
 import Webchannel from '../shows/Webchannel';
 // value of  state initially in the object.
-const initialstate = {
-    show: null,
-    isLoading: true,
-    error: null
-}
+
 // function for handle updation of state.
-const reducer = (prevState, action) => {
-    switch (action.type) {
-        case 'FETCH_SUCESS': {
-            return { isLoading: false, show: action.show, error: null }
-        }
-        case 'FETCH_FAILED': {
-            return {
-                ...prevState,
-                isLoading: false, error: action.error
-            }
-        }
-        default: return prevState;
-    }
-}
 
 // Main component
 const Show = () => {
-
-    const [{ isLoading, error, show }, dispatch] = useReducer(reducer, initialstate);
-    // const [show, setShow] = useState(null);
-    // const [isLoading, setIsLoading] = useState(true);
-    // const [error, setError] = useState(null);
     const { id } = useParams();
-    useEffect(
-        () => {
-            let isMounted = 'true';
-            apiGet(`/shows/${id}?embed[]=seasons&embed7[]=cast`).then(results => {
-                if (isMounted) {
-                    dispatch({ type: 'FETCH_SUCESS', show: results });
-                    //    setShow(results);
-                    // setIsLoading(false); 
-                }
-            }).catch(
-                err => {
-                    dispatch({ type: 'FETCH_FAILED', show: err.message })
-                    // setError(err.message);
-                    // setIsLoading(false);
-                })
-            return () => { isMounted = false; }
-        }, [id])
+    const { isLoading, error, show } = useShow(id);
     // console.log('show', show);
 
 // for load time and error
