@@ -51,7 +51,7 @@ const Show = () => {
                 })
             return () => { isMounted = false; }
         }, [id])
-    console.log('show', show);
+    // console.log('show', show);
     if (isLoading) {
         return <div>Loading...</div>
     }
